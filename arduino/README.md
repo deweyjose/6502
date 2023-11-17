@@ -13,4 +13,4 @@ Download the [Arduino IDE](https://www.arduino.cc/en/software)
 
 Here's a look at the serial output from the *debugger* 
 
-<img src="img/sketch-startup-instructions.png" width="250" />
+<img src="arduino/sketch/img/sketch-startup-instructions.png" width="250" />
