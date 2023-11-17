@@ -10,7 +10,3 @@ Here is a setup [video](https://www.youtube.com/watch?v=LnzuMJLZRdU) by Ben Eate
 
 Download the [Arduino IDE](https://www.arduino.cc/en/software)
 
-
-Here's a look at the serial output from the *debugger* 
-
-<img src="arduino/sketch/img/sketch-startup-instructions.png" width="250" />
