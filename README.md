@@ -12,7 +12,17 @@ A hands-on educational project that brings computer architecture to life by cons
 - **Educational Focus**: Perfect for learning computer architecture fundamentals
 - **Single-step Execution**: Manual clock control for detailed instruction observation
 
+## 🛠️ Upcoming 6502 Projects
 
+| Project | Description | Status |
+|---------|-------------|--------|
+| 6502 serial interface | Add serial communication capabilities to the breadboard computer. | ⏳ Planned |
+| RS232 interface with the 6551 UART | Integrate the 6551 UART chip for RS232 serial communication. | ⏳ Planned |
+| Fixing a hardware bug in software (65C51 UART) | Demonstrate how to work around hardware bugs in the 65C51 UART using software techniques. | ⏳ Planned |
+| Running Apple 1 software on a breadboard computer (Wozmon) | Get the classic Wozmon monitor running on the breadboard 6502. | ⏳ Planned |
+| Adapting WozMon for the breadboard 6502 | Modify and adapt WozMon for compatibility and usability on this custom build. | ⏳ Planned |
+| A simple BIOS for my breadboard computer | Develop a basic BIOS to manage program selection and I/O routines. | ⏳ Planned |
+| Running MSBASIC on my breadboard 6502 computer | Port and run Microsoft BASIC, enabling interactive programming on the breadboard system. | ⏳ Planned |
 
 ## 📋 Requirements
 
