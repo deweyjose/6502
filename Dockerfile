@@ -1,0 +1,27 @@
+FROM ubuntu:22.04
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /opt/vasm
+
+# Download and build VASM
+RUN wget http://sun.hasenbraten.de/vasm/release/vasm.tar.gz \
+    && tar xf vasm.tar.gz \
+    && cd vasm \
+    && make CPU=6502 SYNTAX=oldstyle \
+    && cp vasm6502_oldstyle /usr/local/bin/ \
+    && cd .. \
+    && rm -rf vasm vasm.tar.gz
+
+# Create a directory for source files
+WORKDIR /workspace
+
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

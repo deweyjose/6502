@@ -1,4 +1,3 @@
 .DS_Store
+build/
 *.out
-assembler/vasm/
-assembler/vasm.tar.gz

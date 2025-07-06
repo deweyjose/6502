@@ -1,0 +1,6 @@
+services:
+  vasm:
+    build: .
+    volumes:
+      - ./assembly:/workspace
+    working_dir: /workspace    
