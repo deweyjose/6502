@@ -35,6 +35,24 @@ VASM is the recommended assembler for 6502 development. It compiles assembly cod
 
 **We use Docker for VASM** - see the [Docker Setup](#docker-setup) section below for easy assembly.
 
+**Example:**
+```bash
+# Assemble a 6502 program
+docker-compose run --rm vasm keyboard_ps2.s
+```
+
+**Output:**
+```
+vasm 2.0b (c) in 2002-2025 Volker Barthelmann
+vasm 6502 cpu backend 1.0b (c) 2002,2006,2008-2012,2014-2025 Frank Wille
+vasm oldstyle syntax module 0.21 (c) 2002-2025 Frank Wille
+vasm binary output module 2.3d (c) 2002-2025 Volker Barthelmann and Frank Wille
+
+org0001:8000(acrwx1):            479 bytes
+org0002:fd00(acrwx1):            528 bytes
+org0003:fffa(acrwx1):              6 bytes
+```
+
 ### 2. EPROM Programmer
 
 The EPROM programmer transfers your compiled machine code from the computer to the AT28C256 EEPROM chip. This chip stores your program and boots when the 6502 starts up.
@@ -49,48 +67,41 @@ brew install minipro
 
 **Hardware Required:** TL866II+ programmer or compatible device
 
+**Note:** While we provide a Docker setup for minipro, USB device passthrough is not supported on macOS. You'll need to use the native `brew install minipro` installation for EEPROM programming on Mac.
+
 ## 🐳 Docker Setup
 
 For easy assembly without installing VASM locally, we provide a Docker setup:
 
-### Quick Assembly
+### 1. Assemble the code
 ```bash
-# Assemble the default hello_world.s
-./assemble.sh
-
-# Assemble a specific file
-./assemble.sh my_program.s
+./scripts/assemble.sh keyboard_ps2.s
 ```
 
-### Manual Docker Usage
+**Output:**
+```
+🔧 Assembling 6502 code: keyboard_ps2.s
+vasm 2.0b (c) in 2002-2025 Volker Barthelmann
+vasm 6502 cpu backend 1.0b (c) 2002,2006,2008-2012,2014-2025 Frank Wille
+vasm oldstyle syntax module 0.21 (c) 2002-2025 Frank Wille
+vasm binary output module 2.3d (c) 2002-2025 Volker Barthelmann and Frank Wille
+
+org0001:8000(acrwx1):            479 bytes
+org0002:fd00(acrwx1):            528 bytes
+org0003:fffa(acrwx1):              6 bytes
+✅ Assembly successful! Output: keyboard_ps2.out
+📁 Binary file ready for EPROM programming
+```
+
+### 2. Program the EPROM
 ```bash
-# Build the VASM image
-docker-compose build vasm
-
-# Run assembly manually
-docker-compose --profile assemble run --rm vasm vasm6502_oldstyle -Fbin -dotdir hello_world.s
+./scripts/program.sh keyboard_ps2.out
 ```
 
-### 3. Build and Program
-
-#### Assemble Your Code
-**Important**: Use the `-Fbin` option to generate binary machine code for the EPROM.
-
-```bash
-# Assemble the hello world program
-vasm6502_oldstyle -Fbin -dotdir assembler/hello_world.s
-
-# This creates a.out (binary file ready for EPROM)
+**Output:**
 ```
-
-#### Program the EPROM
-```bash
-# Program the AT28C256 EEPROM
-minipro -p AT28C256 -w a.out
-```
-
-**Expected Output:**
-```
+🔧 Programming EPROM: keyboard_ps2.out to AT28C256
+📡 Connecting to TL866II+ programmer...
 Found TL866II+ 04.2.131 (0x283)
 Erasing... 0.02Sec OK
 Protect off...OK
@@ -98,21 +109,25 @@ Writing Code...  6.78Sec  OK
 Reading Code...  0.49Sec  OK
 Verification OK
 Protect on...OK
+✅ EPROM programming successful!
+📁 keyboard_ps2.out has been written to AT28C256
+🔌 You can now insert the EEPROM into your 6502 computer
 ```
 
 ### 4. Debug Setup
 1. Upload `arduino/sketch/sketch.ino` to your Arduino
-2. Connect Arduino to the breadboard computer
-3. Open Serial Monitor (57600 baud) to see real-time execution
+2. **Important**: Watch [Ben Eater's Arduino debugging video](https://www.youtube.com/watch?v=LnzuMJLZRdU) to learn how to connect the Arduino GPIO pins to the 6502's data and address lines correctly
+3. Connect Arduino to the breadboard computer following Ben's wiring diagram
+4. Open Serial Monitor (57600 baud) to see real-time execution
 
 
 
 
 ## 🔧 Development Workflow
 
-1. **Write Assembly**: Create/modify 6502 assembly code in `assembler/`
-2. **Assemble**: Compile to machine code using VASM
-3. **Program**: Burn to EEPROM using minipro
+1. **Write Assembly**: Create/modify 6502 assembly code in `assembly/`
+2. **Assemble**: Compile to machine code using `./scripts/assemble.sh`
+3. **Program**: Burn to EEPROM using `./scripts/program.sh`
 4. **Test**: Run on breadboard computer
 5. **Debug**: Use Arduino monitor to observe execution
 
@@ -126,13 +141,6 @@ This project covers essential computer science concepts:
 - **I/O Programming**: Device communication and protocols
 - **Debugging**: Hardware and software troubleshooting
 
-## 🤝 Contributing
-
-This is primarily an educational project, but contributions are welcome:
-- Bug reports and fixes
-- Additional example programs
-- Documentation improvements
-- Hardware enhancements
 
 ## 📚 Resources
 
@@ -149,4 +157,4 @@ This project is open source. See [LICENSE](LICENSE) for details.
 
 ---
 
-**Built with ❤️ and lots of breadboards** | **Last Updated**: November 16, 2023
+**Built with ❤️ and lots of breadboards**
