@@ -69,9 +69,9 @@ brew install minipro
 
 **Note:** While we provide a Docker setup for minipro, USB device passthrough is not supported on macOS. You'll need to use the native `brew install minipro` installation for EEPROM programming on Mac.
 
-## 🐳 Docker Setup
+## 🔧 Development Workflow
 
-For easy assembly without installing VASM locally, we provide a Docker setup:
+Complete workflow from assembly to programming using our Docker-based tools:
 
 ### 1. Assemble the code
 ```bash
@@ -112,6 +112,33 @@ Protect on...OK
 ✅ EPROM programming successful!
 📁 keyboard_ps2.out has been written to AT28C256
 🔌 You can now insert the EEPROM into your 6502 computer
+```
+
+### 3. Build Wrapper (One-Command Solution)
+```bash
+./scripts/build.sh keyboard_ps2.s
+```
+
+**Output:**
+```
+🚀 Building 6502 project: keyboard_ps2.s
+📝 Step 1: Assembling keyboard_ps2.s...
+🔧 Assembling 6502 code: keyboard_ps2.s
+...
+✅ Assembly successful! Output: keyboard_ps2.out
+📁 Binary file ready for EPROM programming
+✅ Assembly successful!
+📝 Step 2: Programming keyboard_ps2.out to AT28C256...
+🔧 Programming EPROM: keyboard_ps2.out to AT28C256
+📡 Connecting to TL866II+ programmer...
+Found TL866II+ 04.2.131 (0x283)
+...
+Verification OK
+✅ EPROM programming successful!
+📁 keyboard_ps2.out has been written to AT28C256
+🔌 You can now insert the EEPROM into your 6502 computer
+🎉 Build complete! Your 6502 program is ready to run.
+🔌 Insert the EEPROM into your 6502 computer and power it up.
 ```
 
 ### 4. Debug Setup
