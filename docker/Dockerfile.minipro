@@ -1,0 +1,25 @@
+FROM ubuntu:22.04
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
+    libusb-1.0-0-dev \
+    pkg-config \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /opt/minipro
+
+# Clone and build minipro
+RUN git clone --quiet https://gitlab.com/DavidGriffith/minipro.git  . \
+    && make \
+    && make install
+
+# Create a directory for working with files
+WORKDIR /workspace
+
+# Set the default command
+ENTRYPOINT ["minipro"]
+CMD ["--help"] 

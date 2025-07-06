@@ -1,0 +1,18 @@
+services:
+  vasm:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.vasm
+    volumes:
+      - ./assembly:/workspace
+    working_dir: /workspace    
+
+  minipro:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.minipro
+    volumes:
+      - ./assembly:/workspace
+      - /dev/bus/usb:/dev/bus/usb
+    working_dir: /workspace
+    privileged: true    
