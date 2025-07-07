@@ -29,7 +29,7 @@ rx_wait:
   jsr lcd_print_char
   jmp rx_wait 
 
-  .include lcd.s
+ .include lib/lcd.s
 
 banner: .asciiz "Dewey Jose 2023"
 

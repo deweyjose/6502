@@ -1,3 +1,4 @@
+  .include lib/lcd.s
 
   .org $8000
 
@@ -17,8 +18,6 @@ loop:
   jmp loop
 
 banner: .asciiz "Dewey Jose 2023"
-
-  .include lcd.s
 
   .org $fffc
   .word reset

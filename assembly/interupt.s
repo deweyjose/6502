@@ -129,7 +129,7 @@ increment_counter:
 nmi:
   rti
 
-  .include lcd.s
+  .include "lib/lcd.s"
 
 
   .org $fffa

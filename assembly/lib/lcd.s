@@ -1,12 +1,15 @@
 ; LCD MANAGEMENT CODE
 
-PORTB = $6000     ; first 8 bits
-DDRB = $6002      ; data direction register for PORTB
+PORTB = $6000    ; first 8 bits of PORTB (data pins)
+DDRB = $6002     ; data direction register for PORTB (data pins)
 
-E  = %01000000
-RW = %00100000
-RS = %00010000
+E  = %01000000   ; Enable bit
+RW = %00100000   ; Read/Write bit
+RS = %00010000   ; Register Select bit
 
+; ──────────────────────────────────────────────
+; lcd_init: Initialize LCD and set 4-bit mode
+; ──────────────────────────────────────────────
 lcd_init:  
   lda #%11111111  ; set all pins on PORTB to output   
   sta DDRB
@@ -36,6 +39,9 @@ lcd_init:
   sta PORTB
   rts
 
+; ──────────────────────────────────────────────
+; lcd_setup: Configure LCD display settings
+; ──────────────────────────────────────────────
 lcd_setup:
   lda #%00101000 ; Set 4-bit mode; 2-line display; 5x8 font
   jsr lcd_instruction  
@@ -47,6 +53,9 @@ lcd_setup:
   jsr lcd_instruction
   rts
 
+; ──────────────────────────────────────────────
+; lcd_wait: Wait for LCD to be ready (busy flag)
+; ──────────────────────────────────────────────
 lcd_wait:
   pha
   lda #%11110000  ; LCD data is input
@@ -73,6 +82,9 @@ lcd_busy:
   pla
   rts
 
+; ──────────────────────────────────────────────
+; lcd_instruction: Send instruction byte to LCD
+; ──────────────────────────────────────────────
 lcd_instruction:
   jsr lcd_wait
   pha
@@ -94,6 +106,9 @@ lcd_instruction:
   sta PORTB
   rts
 
+; ──────────────────────────────────────────────
+; lcd_print_char: Print a character to the LCD
+; ──────────────────────────────────────────────
 lcd_print_char:
   jsr lcd_wait
   pha
@@ -117,6 +132,9 @@ lcd_print_char:
   sta PORTB
   rts
 
+; ──────────────────────────────────────────────
+; lcd_home: Move cursor to home position
+; ──────────────────────────────────────────────
 lcd_home:
   lda #%00000010      ; Move cursor to home position.
   jsr lcd_instruction

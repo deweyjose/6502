@@ -1,4 +1,3 @@
-
 ; memory addresses for binary => decimal conversion
 value = $0200 ; 2 bytes address of the value we want to convert to decimal
 mod10 = $0202 ; 2 bytes
@@ -111,7 +110,7 @@ char_loop:
   rts
 
   
-  .include lcd.s
+  .include lib/lcd.s
 
   .org $fffc
   .word reset

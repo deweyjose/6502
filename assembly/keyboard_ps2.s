@@ -186,7 +186,7 @@ print_hex:
 nmi:
   rti
 
-  .include lcd.s
+ .include lib/lcd.s
 
   .org $fd00
 keymap:
