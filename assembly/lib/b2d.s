@@ -1,6 +1,6 @@
 ; ──────────────────────────────────────────────
-; CONVERSION UTILITIES (for 6502 projects)
-; Provides routines to convert between number formats
+; BINARY TO DECIMAL CONVERSION (for 6502 projects)
+; Provides routines to convert 16-bit binary values to ASCII decimal strings
 ; 
 ; Exposes:
 ;   b2d_convert     - Convert 16-bit binary to ASCII decimal string

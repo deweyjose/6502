@@ -26,7 +26,7 @@ RW = %00100000   ; Read/Write bit (LCD: 0=write, 1=read)
 RS = %00010000   ; Register Select bit (LCD: 0=instruction, 1=data)
 
 ; Include conversion utilities
-  .include lib/conversions.s
+  .include lib/b2d.s
 
 ; ──────────────────────────────────────────────
 ; lcd_init: Initialize LCD and set 4-bit mode

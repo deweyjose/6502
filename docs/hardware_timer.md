@@ -105,7 +105,7 @@ update_lcd:
 
 This project showcases our reusable library approach:
 
-### Conversion Library (`lib/conversions.s`)
+### Conversion Library (`lib/b2d.s`)
 ```assembly
 ; Convert 16-bit binary to ASCII decimal
 ; Input:  A = low byte, X = high byte
