@@ -13,6 +13,7 @@ IER = $600e
 kb_wptr = $0000
 kb_rptr = $0001
 kb_flags = $0002
+display_mode = $0003 ; 0 = normal, 1 = hex
 
 RELEASE = %00000001
 SHIFT   = %00000010
@@ -47,6 +48,7 @@ reset:
   sta kb_flags
   sta kb_wptr
   sta kb_rptr
+  sta display_mode
 
 ; ──────────────────────────────────────────────
 ; Main loop: Wait for key, print char and scancode
@@ -67,14 +69,27 @@ key_pressed:
   beq enter_pressed
   cmp #$1b           ; escape - clear display
   beq esc_pressed
-  cmp #$0b
+  cmp #$0b          ; backspace - move cursor left
   beq backspace_pressed
+
+  lda kb_raw_buffer, x
+  cmp #$05          ; toggle mode - toggle between char and hex
+  beq toggle_mode
+
+  lda display_mode
+  beq char_mode
   
-  jsr lcd_print_char
-  
+hex_mode:
   lda kb_raw_buffer, x
   jsr print_hex
-  
+  jmp key_pressed_end
+
+char_mode:
+  lda kb_buffer, x  
+  jsr lcd_print_char
+  jmp key_pressed_end
+    
+key_pressed_end:
   inc kb_rptr
   jmp loop
 
@@ -101,9 +116,10 @@ backspace_pressed:
   inc kb_rptr
   jmp loop
 
-home_pressed:
-  lda #%10000000 ; put cursor at position 0
-  jsr lcd_instruction
+toggle_mode:
+  lda display_mode
+  eor #01
+  sta display_mode
   inc kb_rptr
   jmp loop
 
@@ -208,7 +224,7 @@ print_hex:
 nmi:
   rti
 
-.include lib/lcd.s
+  .include lib/lcd.s
 
   .org $fd00
 keymap:

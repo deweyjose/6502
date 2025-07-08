@@ -9,6 +9,7 @@
 ;   lcd_wait         - Wait for LCD to be ready (busy flag)
 ;   lcd_instruction  - Send instruction byte to LCD
 ;   lcd_print_char   - Print a character to the LCD
+;   lcd_print_num    - Print a 16-bit number to the LCD
 ;   lcd_home         - Move cursor to home position
 ; 
 ; Hardware:
@@ -23,6 +24,9 @@ DDRB = $6002     ; data direction register for PORTB (data pins)
 E  = %01000000   ; Enable bit (LCD: latch data on high-to-low transition)
 RW = %00100000   ; Read/Write bit (LCD: 0=write, 1=read)
 RS = %00010000   ; Register Select bit (LCD: 0=instruction, 1=data)
+
+; Include conversion utilities
+  .include lib/conversions.s
 
 ; ──────────────────────────────────────────────
 ; lcd_init: Initialize LCD and set 4-bit mode
@@ -153,6 +157,26 @@ lcd_print_char:
   sta PORTB
   eor #E          ; Clear E bit
   sta PORTB
+  rts
+
+; ──────────────────────────────────────────────
+; lcd_print_num: Print a 16-bit number to the LCD
+; Input:  A = low byte of number, X = high byte of number
+; Converts number to decimal ASCII and prints it
+; ──────────────────────────────────────────────
+lcd_print_num:
+  ; Convert number to ASCII decimal string
+  jsr b2d_convert
+  
+  ; Print the resulting string
+  ldy #0
+lcd_print_num_loop:
+  lda b2d_message, y
+  beq lcd_print_num_done
+  jsr lcd_print_char
+  iny
+  jmp lcd_print_num_loop
+lcd_print_num_done:
   rts
 
 ; ──────────────────────────────────────────────
