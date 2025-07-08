@@ -1,17 +1,26 @@
-; memory addresses for binary => decimal conversion
-value = $0200 ; 2 bytes address of the value we want to convert to decimal
-mod10 = $0202 ; 2 bytes
-message = $0204 ; 6 bytes
+; ──────────────────────────────────────────────
+; Binary to Decimal Conversion Demo
+; Converts a 16-bit binary value to ASCII decimal and prints to LCD
+; ──────────────────────────────────────────────
+
+; Memory addresses for binary => decimal conversion
+value   = $0200 ; 2 bytes: address of the value we want to convert to decimal
+mod10   = $0202 ; 2 bytes: holds remainder during division by 10
+message = $0204 ; 6 bytes: stores resulting ASCII decimal string
 
   .org $8000
 
+; ──────────────────────────────────────────────
+; Reset vector: program entry point
+; ──────────────────────────────────────────────
 reset:
-  ldx $ff
+  ldx $ff         ; Initialize stack pointer
   txs
 
-  jsr lcd_init
-  jsr lcd_setup
+  jsr lcd_init    ; Initialize LCD hardware
+  jsr lcd_setup   ; Configure LCD display
 
+  ; Clear the message buffer
   lda #0
   sta message
   sta message + 1 
@@ -20,60 +29,64 @@ reset:
   sta message + 4 
   sta message + 5 
 
-  ; load the number into the value (memory)
+  ; Load the number to convert into 'value' (from 'number' below)
   lda number
   sta value
   lda number + 1
   sta value + 1
 
+; ──────────────────────────────────────────────
+; b2d_divide: Main binary-to-decimal conversion loop
+; Uses repeated division by 10 to extract decimal digits
+; ──────────────────────────────────────────────
 b2d_divide:
   lda #0             
   sta mod10
   sta mod10 + 1
   clc
  
-  ; loop through the 16 bits
+  ; Loop through the 16 bits of the value
   ldx #16
 b2d_divide_loop:
-  ; rotate the quotient and remainder to the left
+  ; Rotate the quotient and remainder to the left
   rol value
   rol value + 1
   rol mod10
   rol mod10 + 1
 
-  ; subtract 10 from low byte and save to Y
+  ; Subtract 10 from low byte and save to Y
   sec
   lda mod10
   sbc #10
   tay
-  ; subtract high byte from zero to see if we go negative (we have a remainder)
+  ; Subtract high byte from zero to see if we go negative (remainder)
   lda mod10 + 1
   sbc #0
-  ; branch if no remainder
+  ; Branch if no remainder
   bcc b2d_ignore_result
-  ; store the remainder in mod10
+  ; Store the remainder in mod10
   sty mod10
   sta mod10 + 1
 
 b2d_ignore_result:
   dex
   bne b2d_divide_loop
-  ; shift the last bit into quotient
+  ; Shift the last bit into quotient
   rol value
   rol value + 1
 
+  ; Convert remainder to ASCII and push to message buffer
   lda mod10
   clc
   adc #"0"
   jsr push_char
 
+  ; If value is not zero, repeat
   lda value
   ora value + 1
-  ; if we are not 0, we have more work to do ...
   bne b2d_divide
 
-  ; binary_value is zero, we've pushed all the bytes
-  ; into message, time to print it
+  ; All digits pushed, print the message
   ldx #0
 b2d_print_message:
   lda message,x
@@ -82,35 +95,44 @@ b2d_print_message:
   inx
   jmp b2d_print_message
 
+; ──────────────────────────────────────────────
+; Infinite loop (end of program)
+; ──────────────────────────────────────────────
 loop:
   jmp loop
 
-number: .word 1729
-dx: .asciiz "X"
+; ──────────────────────────────────────────────
+; Data section
+; ──────────────────────────────────────────────
+number: .word 1729      ; Number to convert (change as needed)
+dx: .asciiz "X"         ; Unused/test string
 
-; add the character in the A register to the beginning of the 
-; null-terminated string `message`
+; ──────────────────────────────────────────────
+; push_char: Add character in A to the beginning of the null-terminated string 'message'
+; Used to build the decimal string in reverse order
+; ──────────────────────────────────────────────
 push_char:
-  pha            ; push first new char onto the stack
+  pha            ; Push new char onto the stack
   ldy #0
 
 char_loop:
-  lda message,y ; get char on string and put into x 
+  lda message,y  ; Get char from string and put into X
   tax
   pla
-  sta message,y ; pul char off stack and add to the string
+  sta message,y  ; Pull char off stack and add to string
   iny
   txa
-  pha            ; push car from string onto stack
+  pha            ; Push char from string onto stack
   bne char_loop
   
   pla
-  sta message,y  ; pull the null off the stack and add to the end
-
+  sta message,y  ; Pull the null off the stack and add to the end
   rts
 
-  
-  .include lib/lcd.s
+; ──────────────────────────────────────────────
+; LCD utility routines (external)
+; ──────────────────────────────────────────────
+.include lib/lcd.s
 
   .org $fffc
   .word reset

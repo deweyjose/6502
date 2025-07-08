@@ -1,3 +1,9 @@
+; ──────────────────────────────────────────────
+; PS/2 Keyboard Demo
+; Reads input from a PS/2 keyboard and displays characters
+; and scancodes on the LCD using 6502 assembly.
+; ──────────────────────────────────────────────
+
 PORTA = $6001
 DDRA = $6003
 PCR = $600c
@@ -16,10 +22,14 @@ kb_raw_buffer = $0300   ; 256-byte raw buffer 0300-03ff
 
   .org $8000
 
+; ──────────────────────────────────────────────
+; Reset vector: program entry point
+; ──────────────────────────────────────────────
 reset:
   ldx #$ff
   txs
 
+  ; Configure VIA for keyboard interrupt
   lda #$01
   sta PCR
   lda #$82
@@ -38,6 +48,9 @@ reset:
   sta kb_wptr
   sta kb_rptr
 
+; ──────────────────────────────────────────────
+; Main loop: Wait for key, print char and scancode
+; ──────────────────────────────────────────────
 loop:
   sei
   lda kb_rptr
@@ -94,7 +107,10 @@ home_pressed:
   inc kb_rptr
   jmp loop
 
-; IRQ vector points here
+; ──────────────────────────────────────────────
+; IRQ vector: Keyboard interrupt handler
+; Handles key press, release, and shift state
+; ──────────────────────────────────────────────
 keyboard_interrupt:
   pha
   txa
@@ -165,6 +181,9 @@ exit:
   pla
   rti
 
+; ──────────────────────────────────────────────
+; print_hex: Print 2-digit hex value to LCD
+; ──────────────────────────────────────────────
 print_hex:  
   pha                 ; push a onto the stack
   lsr                 ; shift the high nibble into the low nibble
@@ -183,10 +202,13 @@ print_hex:
   jsr lcd_print_char  ; lets print it
   rts
 
+; ──────────────────────────────────────────────
+; nmi: Non-maskable interrupt handler (unused)
+; ──────────────────────────────────────────────
 nmi:
   rti
 
- .include lib/lcd.s
+.include lib/lcd.s
 
   .org $fd00
 keymap:
