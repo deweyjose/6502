@@ -11,6 +11,8 @@
 ;   lcd_print_char   - Print a character to the LCD
 ;   lcd_print_num    - Print a 16-bit number to the LCD
 ;   lcd_home         - Move cursor to home position
+;   lcd_clear        - Clear the display
+;   ldc_line2        - Move cursor to line 2
 ; 
 ; Hardware:
 ;   PORTB = $6000    - VIA port B (data pins)
@@ -137,7 +139,9 @@ lcd_instruction:
 ; Splits byte into nibbles, sets RS for data
 ; ──────────────────────────────────────────────
 lcd_print_char:
+  pha
   jsr lcd_wait
+  pla
   pha
   lsr
   lsr
@@ -150,6 +154,7 @@ lcd_print_char:
   eor #E          ; Clear E bit
   sta PORTB
   pla
+  pha
   and #%00001111  ; Send low 4 bits
   ora #RS         ; Set RS
   sta PORTB
@@ -157,6 +162,7 @@ lcd_print_char:
   sta PORTB
   eor #E          ; Clear E bit
   sta PORTB
+  pla
   rts
 
 ; ──────────────────────────────────────────────
@@ -183,6 +189,36 @@ lcd_print_num_done:
 ; lcd_home: Move cursor to home position
 ; ──────────────────────────────────────────────
 lcd_home:
+  pha
   lda #%00000010      ; Move cursor to home position.
   jsr lcd_instruction
+  pla
+  rts
+
+; ──────────────────────────────────────────────
+; lcd_clear: Clear the display
+; ──────────────────────────────────────────────
+lcd_clear:
+  pha
+  lda #%00000001      ; Clear display
+  jsr lcd_instruction
+  pla
+  rts
+
+ldc_line2:
+  pha
+  lda #%10101000 ; put cursor at position 40
+  jsr lcd_instruction
+  pla
+  rts
+
+lcd_del:
+  pha
+  lda #%00010000 ; move cursor left 0001 Shift(0) Right(0) 0 0
+  jsr lcd_instruction
+  lda #" "       ; clear the character
+  jsr lcd_print_char
+  lda #%00010000 ; put cursor at position 15
+  jsr lcd_instruction  
+  pla
   rts

@@ -13,4 +13,4 @@ OUTPUT="${OUTPUT_DIR}/${BASENAME}.out"
 
 mkdir -p "$OUTPUT_DIR"
 
-exec vasm6502_oldstyle -Fbin -dotdir -o "$OUTPUT" "$SOURCE"
+exec vasm6502_oldstyle -Fbin -dotdir -c02 -o "$OUTPUT" "$SOURCE"
