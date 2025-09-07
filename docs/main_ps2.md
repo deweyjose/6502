@@ -4,6 +4,8 @@
 
 <img src="imgs/main_ps2.jpeg" alt="PS/2 Keyboard Demo" width="600">
 
+**📁 [View Source Code](../assembly/keyboard/main_ps2.s)**
+
 ## 🎯 What It Does
 
 This project transforms your breadboard 6502 into a **real computer** by adding PS/2 keyboard support! You can:

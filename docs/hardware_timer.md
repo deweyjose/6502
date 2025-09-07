@@ -4,6 +4,8 @@
 
 <img src="imgs/hardware_timer.jpeg" alt="Hardware Timer Demo" width="600">
 
+**📁 [View Source Code](../assembly/hardware_timer/main.s)**
+
 ## 🎯 What It Does
 
 This project demonstrates **true multitasking** on your 6502 breadboard computer using the W65C22 VIA's hardware timer. The system runs two independent tasks simultaneously:
