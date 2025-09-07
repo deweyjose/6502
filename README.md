@@ -19,8 +19,8 @@ A hands-on educational project that brings computer architecture to life by cons
 | Hardware Timer Demo | Uses VIA hardware timer to increment a counter and display its value on the LCD, with LED blinking every 250ms. | ✅ Complete | [📖 Details](docs/hardware_timer.md) |
 | Keyboard - PS/2 | Reads input from a PS/2 keyboard and displays characters and scancodes on the LCD with mode toggle between char and hex display. | ✅ Complete | [📖 Details](docs/main_ps2.md) |
 | RS-232 Serial Keyboard | Receive characters from a PC or terminal over RS-232 and display them on the LCD using bit-banging techniques. | ✅ Complete | [📖 Details](docs/serial_interface.md) |
-| RS232 interface with the 6551 UART | Integrate the 6551 UART chip for RS232 serial communication. | ⏳ Planned |
-| Fixing a hardware bug in software (65C51 UART) | Demonstrate how to work around hardware bugs in the 65C51 UART using software techniques. | ⏳ Planned |
+| RS232 interface with the 6551 UART | Integrate the 6551 UART chip for RS232 serial communication with hardware flow control and proper terminal compatibility. | ✅ Complete | [📖 Details](docs/uart_serial_interface.md) |
+| Fixing a hardware bug in software (65C51 UART) | Debug and fix hardware issues including wrong capacitor values and LCD library bugs that prevented proper UART communication. | ✅ Complete | [📖 Details](docs/uart_serial_interface.md) |
 | Running Apple 1 software on a breadboard computer (Wozmon) | Get the classic Wozmon monitor running on the breadboard 6502. | ⏳ Planned |
 | Adapting WozMon for the breadboard 6502 | Modify and adapt WozMon for compatibility and usability on this custom build. | ⏳ Planned |
 | A simple BIOS for my breadboard computer | Develop a basic BIOS to manage program selection and I/O routines. | ⏳ Planned |
