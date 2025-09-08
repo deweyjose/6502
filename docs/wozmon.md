@@ -150,11 +150,83 @@ Then paste the output into Wozmon and run with `1000R`.
 
 ### Terminal Configuration
 
-For reliable communication, configure your terminal with:
-- **Baud Rate**: 19200
-- **Character Delay**: 10ms
-- **Newline Delay**: 5ms
-- **Line Endings**: CR only (not CRLF)
+**Finding the right serial terminal is crucial!** Many modern terminals send data too fast for Wozmon to handle, causing characters to be lost. Here's how to configure Minicom for reliable communication:
+
+#### **Minicom Setup (Recommended)**
+
+**Installation:**
+```bash
+# macOS
+brew install minicom
+
+# Linux
+sudo apt-get install minicom
+```
+
+**Configuration Steps:**
+1. **Start Minicom:**
+   ```bash
+   minicom -D /dev/ttyUSB0  # Adjust device as needed
+   ```
+
+2. **Access Configuration:**
+   - Press `Ctrl+A` then `O` (or `ESC+O` on Mac)
+   - Select "Serial port setup"
+
+3. **Set Serial Parameters:**
+   - **Serial Device**: `/dev/ttyUSB0` (or your device)
+   - **Baud Rate**: 19200
+   - **Data Bits**: 8
+   - **Parity**: None
+   - **Stop Bits**: 1
+   - **Hardware Flow Control**: No
+   - **Software Flow Control**: No
+
+4. **Configure Screen Settings:**
+   - Press `Ctrl+A` then `T` (or `ESC+T` on Mac)
+   - **Add linefeed**: Yes
+   - **Add carriage return**: Yes
+
+5. **Set Timing Delays:**
+   - **Character TX delay (ms)**: 10
+   - **Newline TX delay (ms)**: 5
+
+6. **Save Configuration:**
+   - Press `Ctrl+A` then `O` (or `ESC+O` on Mac)
+   - Select "Save setup as dfl" to make it permanent
+
+#### **File Transfer Configuration**
+
+For loading entire programs via file transfer:
+
+1. **Access File Transfer:**
+   - Press `Ctrl+A` then `S` (or `ESC+S` on Mac)
+   - Select "ASCII"
+
+2. **Configure ASCII Transfer:**
+   - **Program**: `ascii-xfr -dsv -c 100 -l 1`
+   - **Character delay**: 100ms
+   - **Newline delay**: 1ms
+
+3. **Save Configuration:**
+   - Press `Ctrl+A` then `O` (or `ESC+O` on Mac)
+   - Select "Save setup as dfl"
+
+#### **Why These Settings Matter**
+
+- **Character Delays**: Prevent data loss when pasting machine code
+- **Line Endings**: Wozmon expects CR only, not CRLF
+- **File Transfer Delays**: Ensure large programs load reliably
+- **Flow Control**: Disabled to avoid handshaking issues
+
+#### **Testing Your Setup**
+
+1. **Connect to Wozmon** and look for the `*` prompt
+2. **Type a simple command**: `8000` (should show memory contents)
+3. **Test character echo**: Type `8000: FF` (should echo back)
+4. **Try pasting**: Use the hexdump command output
+
+**If characters are missing or garbled, increase the delays!**
 
 ## 🎯 Example Programs
 
