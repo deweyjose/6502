@@ -22,7 +22,7 @@ A hands-on educational project that brings computer architecture to life by cons
 | RS232 interface with the 6551 UART | Integrate the 6551 UART chip for RS232 serial communication with hardware flow control and proper terminal compatibility. | ✅ Complete | [📖 Details](docs/uart_serial_interface.md) |
 | Fixing a hardware bug in software (65C51 UART) | Debug and fix hardware issues including wrong capacitor values and LCD library bugs that prevented proper UART communication. | ✅ Complete | [📖 Details](docs/uart_serial_interface.md) |
 | Running Apple 1 software on a breadboard computer (Wozmon) | Get the classic Wozmon monitor running on the breadboard 6502 with serial communication and program loading capabilities. | ✅ Complete | [📖 Details](docs/wozmon.md) |
-| Adapting WozMon for the breadboard 6502 | Modify and adapt WozMon for compatibility and usability on this custom build. | ⏳ Planned |
+| Adapting WozMon for the breadboard 6502 | Modify and adapt WozMon for compatibility and usability on this custom build with proper serial communication and program loading. | ✅ Complete | [📖 Details](docs/wozmon.md) |
 | A simple BIOS for my breadboard computer | Develop a basic BIOS to manage program selection and I/O routines. | ⏳ Planned |
 | Running MSBASIC on my breadboard 6502 computer | Port and run Microsoft BASIC, enabling interactive programming on the breadboard system. | ⏳ Planned |
 
