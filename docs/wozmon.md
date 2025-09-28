@@ -188,8 +188,8 @@ sudo apt-get install minicom
    - **Add carriage return**: Yes
 
 5. **Set Timing Delays:**
-   - **Character TX delay (ms)**: 10
-   - **Newline TX delay (ms)**: 5
+   - **Character TX delay (ms)**: 50 (increased for reliable BASIC program pasting)
+   - **Newline TX delay (ms)**: 20 (increased for better line processing)
 
 6. **Save Configuration:**
    - Press `Ctrl+A` then `O` (or `ESC+O` on Mac)

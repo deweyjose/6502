@@ -176,26 +176,33 @@ The system uses a sophisticated build process:
 
 ### Interactive Calculator
 ```basic
-10 INPUT "ENTER FIRST NUMBER: ", A
-20 INPUT "ENTER SECOND NUMBER: ", B
-30 INPUT "ENTER OPERATION (+, -, *, /): ", OP$
-40 IF OP$ = "+" THEN PRINT A + B
-50 IF OP$ = "-" THEN PRINT A - B
-60 IF OP$ = "*" THEN PRINT A * B
-70 IF OP$ = "/" THEN PRINT A / B
-80 GOTO 10
+10 PRINT "ENTER FIRST NUMBER: ";
+20 INPUT A
+30 PRINT "ENTER SECOND NUMBER: ";
+40 INPUT B
+50 PRINT "ENTER OPERATION (+, -, *, /): ";
+60 INPUT OP$
+70 IF OP$ = "+" THEN PRINT A + B
+80 IF OP$ = "-" THEN PRINT A - B
+90 IF OP$ = "*" THEN PRINT A * B
+100 IF OP$ = "/" THEN PRINT A / B
+110 GOTO 10
 ```
+
+**Note:** This version of Microsoft BASIC doesn't support `INPUT` statements with string prompts. Use separate `PRINT` and `INPUT` statements instead, with a semicolon after `PRINT` to keep the cursor on the same line.
+
+**Copy/Paste Tip:** For reliable pasting of BASIC programs, configure Minicom with 50ms character delay and 20ms newline delay to prevent character corruption during paste operations.
 
 ### Number Guessing Game
 ```basic
-10 RANDOMIZE
-20 SECRET = INT(RND(1) * 100) + 1
-30 PRINT "I'M THINKING OF A NUMBER 1-100"
-40 INPUT "YOUR GUESS: ", GUESS
+10 SECRET = INT(RND(1) * 100) + 1
+20 PRINT "I'M THINKING OF A NUMBER 1-100"
+30 PRINT "YOUR GUESS: ";
+40 INPUT GUESS
 50 IF GUESS = SECRET THEN PRINT "CORRECT!": GOTO 80
 60 IF GUESS > SECRET THEN PRINT "TOO HIGH"
 70 IF GUESS < SECRET THEN PRINT "TOO LOW"
-75 GOTO 40
+75 GOTO 30
 80 PRINT "PLAY AGAIN? (Y/N)"
 90 INPUT A$
 100 IF A$ = "Y" THEN GOTO 10
