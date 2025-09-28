@@ -23,8 +23,8 @@ A hands-on educational project that brings computer architecture to life by cons
 | Fixing a hardware bug in software (65C51 UART) | Debug and fix hardware issues including wrong capacitor values and LCD library bugs that prevented proper UART communication. | ✅ Complete | [📖 Details](docs/uart_serial_interface.md) |
 | Running Apple 1 software on a breadboard computer (Wozmon) | Get the classic Wozmon monitor running on the breadboard 6502 with serial communication and program loading capabilities. | ✅ Complete | [📖 Details](docs/wozmon.md) |
 | Adapting WozMon for the breadboard 6502 | Modify and adapt WozMon for compatibility and usability on this custom build with proper serial communication and program loading. | ✅ Complete | [📖 Details](docs/wozmon.md) |
-| A simple BIOS for my breadboard computer | Develop a basic BIOS to manage program selection and I/O routines. | ⏳ Planned |
-| Running MSBASIC on my breadboard 6502 computer | Port and run Microsoft BASIC, enabling interactive programming on the breadboard system. | ⏳ Planned |
+| A simple BIOS for my breadboard computer | Develop a basic BIOS to manage program selection and I/O routines. | ✅ Complete | [📖 Details](docs/bios.md) |
+| Running MSBASIC on my breadboard 6502 computer | Port and run Microsoft BASIC, enabling interactive programming on the breadboard system. | ✅ Complete | [📖 Details](docs/msbasic.md) |
 
 ## 📋 Requirements
 
@@ -83,11 +83,57 @@ brew install minipro
 
 ## 🔧 Development Workflow
 
-Complete workflow from assembly to programming using our Docker-based tools:
+This project uses two different build systems depending on the complexity of the software:
 
-### 1. Assemble the code
+### Build System Overview
+
+| Project Type | Compiler | Script | Use Case |
+|--------------|----------|--------|----------|
+| **Early Exercises** | VASM | `assemble.sh` | Hardware timer, keyboard demos, libraries |
+| **Advanced Software** | CA65/LD65 | `make.sh` | BIOS, Wozmon, Microsoft BASIC |
+
+### 🐳 Docker Setup
+
+First, build the required Docker images:
+
 ```bash
-./scripts/assemble.sh keyboard_ps2.s
+# Build VASM compiler image (for early exercises)
+docker-compose build vasm
+
+# Build CA65/LD65 compiler images (for advanced software)
+docker-compose build ca65 ld65
+
+# Build minipro programmer image
+docker-compose build minipro
+```
+
+**Optional: Create convenient aliases**
+Add these to your `~/.bashrc` or `~/.zshrc`:
+
+```bash
+# CA65 compiler alias
+alias ca65='docker run -it --rm -v.:/workspace 6502-ca65'
+
+# LD65 linker alias
+alias ld65='docker run -it --rm --entrypoint=/opt/cc65/bin/ld65 -v .:/workspace 6502-ld65'
+```
+
+**Note:** Minipro cannot run in Docker due to USB device access requirements, so use the native installation instead.
+
+### 🔨 Building Projects
+
+#### For Early Exercises (Hardware Timer, Keyboard, Libraries)
+Use VASM compiler for simple, single-file projects:
+
+```bash
+# Assemble the code
+./scripts/assemble.sh assembly/keyboard/main_ps2.s
+
+# Program the EPROM
+./scripts/program.sh keyboard_ps2.out
+
+# Or use the build wrapper (one command)
+./scripts/build.sh assembly/keyboard/main_ps2.s
 ```
 
 **Output:**
@@ -105,14 +151,21 @@ org0003:fffa(acrwx1):              6 bytes
 📁 Binary file ready for EPROM programming
 ```
 
-### 2. Program the EPROM
+#### For Advanced Software (BIOS, Wozmon, Microsoft BASIC)
+Use CA65/LD65 compiler for complex, multi-file projects:
+
 ```bash
-./scripts/program.sh keyboard_ps2.out
+# Build complete system with BIOS, Wozmon, and BASIC
+./scripts/make.sh
 ```
 
 **Output:**
 ```
-🔧 Programming EPROM: keyboard_ps2.out to AT28C256
+🔧 Building 6502 project: eater
+✅ Assembly successful! Output: eater.o
+🔧 Linking 6502 project: eater
+✅ Linking successful! Output: eater.bin
+🔧 Programming EPROM: eater.bin to AT28C256
 📡 Connecting to TL866II+ programmer...
 Found TL866II+ 04.2.131 (0x283)
 Erasing... 0.02Sec OK
@@ -122,38 +175,11 @@ Reading Code...  0.49Sec  OK
 Verification OK
 Protect on...OK
 ✅ EPROM programming successful!
-📁 keyboard_ps2.out has been written to AT28C256
+📁 eater.bin has been written to AT28C256
 🔌 You can now insert the EEPROM into your 6502 computer
 ```
 
-### 3. Build Wrapper (One-Command Solution)
-```bash
-./scripts/build.sh keyboard_ps2.s
-```
-
-**Output:**
-```
-🚀 Building 6502 project: keyboard_ps2.s
-📝 Step 1: Assembling keyboard_ps2.s...
-🔧 Assembling 6502 code: keyboard_ps2.s
-...
-✅ Assembly successful! Output: keyboard_ps2.out
-📁 Binary file ready for EPROM programming
-✅ Assembly successful!
-📝 Step 2: Programming keyboard_ps2.out to AT28C256...
-🔧 Programming EPROM: keyboard_ps2.out to AT28C256
-📡 Connecting to TL866II+ programmer...
-Found TL866II+ 04.2.131 (0x283)
-...
-Verification OK
-✅ EPROM programming successful!
-📁 keyboard_ps2.out has been written to AT28C256
-🔌 You can now insert the EEPROM into your 6502 computer
-🎉 Build complete! Your 6502 program is ready to run.
-🔌 Insert the EEPROM into your 6502 computer and power it up.
-```
-
-### 4. Debug Setup
+### 🐛 Debug Setup
 1. Upload `arduino/sketch/sketch.ino` to your Arduino
 2. **Important**: Watch [Ben Eater's Arduino debugging video](https://www.youtube.com/watch?v=LnzuMJLZRdU) to learn how to connect the Arduino GPIO pins to the 6502's data and address lines correctly
 3. Connect Arduino to the breadboard computer following Ben's wiring diagram
@@ -162,13 +188,6 @@ Verification OK
 
 
 
-## 🔧 Development Workflow
-
-1. **Write Assembly**: Create/modify 6502 assembly code in `assembly/`
-2. **Assemble**: Compile to machine code using `./scripts/assemble.sh`
-3. **Program**: Burn to EEPROM using `./scripts/program.sh`
-4. **Test**: Run on breadboard computer
-5. **Debug**: Use Arduino monitor to observe execution
 
 ## 🎓 Learning Objectives
 

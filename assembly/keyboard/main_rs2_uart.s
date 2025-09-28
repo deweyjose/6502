@@ -132,7 +132,7 @@ nmi:
 irq_handler:
   rti
 
-  .include lib/lcd.s
+  .include ../lib/lcd.s
 
   .org $fffa
   .word nmi

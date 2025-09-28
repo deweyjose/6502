@@ -224,7 +224,7 @@ print_hex:
 nmi:
   rti
 
-  .include lib/lcd.s
+  .include ../lib/lcd.s
 
   .org $fd00
 keymap:

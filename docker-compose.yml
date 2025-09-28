@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: docker/Dockerfile.vasm
     volumes:
-      - ./assembly:/workspace
+      - .:/workspace
     working_dir: /workspace    
 
   minipro:
@@ -12,7 +12,26 @@ services:
       context: .
       dockerfile: docker/Dockerfile.minipro
     volumes:
-      - ./assembly:/workspace
+      - .:/workspace
       - /dev/bus/usb:/dev/bus/usb
     working_dir: /workspace
     privileged: true    
+
+  ca65:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.cc65
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    privileged: true
+
+  ld65:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.cc65
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    entrypoint: ["/opt/cc65/bin/ld65"]
+    privileged: true

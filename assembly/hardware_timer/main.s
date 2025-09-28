@@ -116,7 +116,7 @@ irq:
 end_irq:
   rti
 
-  .include lib/lcd.s
+  .include ../lib/lcd.s
 
   .org $fffc
   .word reset

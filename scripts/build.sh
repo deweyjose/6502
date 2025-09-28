@@ -15,7 +15,7 @@ BINARY_FILE="${BASE_NAME}.out"
 
 # Clean up any existing output file to ensure fresh build
 echo "🧹 Cleaning up old build files..."
-rm -f "assembly/build/${BINARY_FILE}"
+rm -f "build/${BINARY_FILE}"
 
 echo "📝 Step 1: Assembling $SOURCE_FILE..."
 ./scripts/assemble.sh "$SOURCE_FILE"

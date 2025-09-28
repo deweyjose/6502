@@ -10,15 +10,15 @@ EPROM_TYPE=${2:-"AT28C256"}
 echo "🔧 Programming EPROM: $BINARY_FILE to $EPROM_TYPE"
 
 # Check if file exists
-if [ ! -f "assembly/build/$BINARY_FILE" ]; then
-    echo "❌ File assembly/build/$BINARY_FILE not found!"
+if [ ! -f "build/$BINARY_FILE" ]; then
+    echo "❌ File build/$BINARY_FILE not found!"
     echo "💡 Make sure to assemble your code first with ./assemble.sh"
     exit 1
 fi
 
 # Run the EPROM programmer
 echo "📡 Connecting to TL866II+ programmer..."
-minipro -p "$EPROM_TYPE" -w "assembly/build/$BINARY_FILE" -u
+minipro -p "$EPROM_TYPE" -w "build/$BINARY_FILE" -u
 
 # Check if programming was successful
 if [ $? -eq 0 ]; then
