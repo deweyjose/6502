@@ -209,6 +209,10 @@ This project covers essential computer science concepts:
 - **[6502 Instruction Set](http://www.6502.org/tutorials/6502opcodes.html)**: CPU reference
 - **[W65C02S Datasheet](manuals/w65c02s.pdf)**: Detailed CPU specifications
 
+## 🙏 Credits
+
+**Microsoft BASIC Implementation**: This project uses the excellent [mist64/msbasic](https://github.com/mist64/msbasic) port by Michael Steil and contributors. This remarkable work provides a single integrated assembly source tree that can generate nine different versions of Microsoft BASIC for 6502. See [assembly/msbasic/README.md](assembly/msbasic/README.md) for full attribution and details.
+
 ## 📄 License
 
 This project is open source. See [LICENSE](LICENSE) for details.
